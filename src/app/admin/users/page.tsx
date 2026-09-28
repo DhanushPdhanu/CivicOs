@@ -74,7 +74,7 @@ export default function AdminUsers() {
                 <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{user.name}</td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{user.email}</td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm">
-                  <Badge variant={user.role === 'admin' ? 'destructive' : user.role === 'government' ? 'warning' : 'default'}>
+                  <Badge variant={user.role.toLowerCase() === 'admin' ? 'destructive' : user.role.toLowerCase() === 'government' ? 'warning' : 'default'}>
                     {user.role}
                   </Badge>
                 </td>
@@ -96,7 +96,7 @@ export default function AdminUsers() {
                   <div className="font-medium">{user.name}</div>
                   <div className="text-sm text-gray-500">{user.email}</div>
                 </div>
-                <Badge variant={user.role === 'admin' ? 'destructive' : user.role === 'government' ? 'warning' : 'default'}>
+                <Badge variant={user.role.toLowerCase() === 'admin' ? 'destructive' : user.role.toLowerCase() === 'government' ? 'warning' : 'default'}>
                   {user.role}
                 </Badge>
               </div>

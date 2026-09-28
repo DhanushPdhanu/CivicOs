@@ -21,11 +21,14 @@ export default function AdminReports() {
     fetchStats()
   }, [])
 
-  const filteredReports = reports.filter(report => 
-    report.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    report.category.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    report.district.toLowerCase().includes(searchTerm.toLowerCase())
-  )
+  const filteredReports = reports.filter(report => {
+    const dist = report.district || report.location?.district || '';
+    return (
+      report.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      report.category.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      dist.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+  })
 
   return (
     <div className="space-y-6">
@@ -68,9 +71,9 @@ export default function AdminReports() {
                 <td className="px-6 py-4 text-sm font-medium text-gray-900">{report.title}</td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{report.category}</td>
                 <td className="px-6 py-4 whitespace-nowrap"><StatusBadge status={report.status} /></td>
-                <td className="px-6 py-4 whitespace-nowrap"><SeverityBadge severity={report.severity} /></td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{report.district}</td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{new Date(report.createdAt).toLocaleDateString()}</td>
+                <td className="px-6 py-4 whitespace-nowrap"><SeverityBadge severity={report.severity || report.aiAnalysis?.severity || 'MEDIUM'} /></td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{report.district || report.location?.district}</td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{new Date(report.createdAt || report.timestamp).toLocaleDateString()}</td>
               </tr>
             ))}
           </tbody>
@@ -85,11 +88,11 @@ export default function AdminReports() {
               <div className="flex flex-wrap gap-2 text-sm text-gray-500">
                 <span>{report.category}</span>
                 <span>•</span>
-                <span>{report.district}</span>
+                <span>{report.district || report.location?.district}</span>
               </div>
               <div className="flex gap-2 mt-2">
                 <StatusBadge status={report.status} />
-                <SeverityBadge severity={report.severity} />
+                <SeverityBadge severity={report.severity || report.aiAnalysis?.severity || 'MEDIUM'} />
               </div>
             </CardContent>
           </Card>

@@ -29,10 +29,14 @@ export interface CitizenReport {
   description: string;
   category: Category;
   location: Location;
+  address?: string;
+  district?: string;
   images: string[];
   audioUrl?: string;
   status: Status;
   timestamp: string;
+  createdAt?: string;
+  severity?: Severity;
   aiAnalysis?: {
     severity: Severity;
     urgency: Severity;
@@ -46,9 +50,11 @@ export interface Hotspot {
   id: string;
   category: Category;
   location: Location;
+  district?: string;
   reportIds: string[];
   reportCount: number;
   trendPercentage: number;
+  trend?: 'up' | 'down' | 'stable' | string;
   severity: Severity;
   populationAffected: number;
 }

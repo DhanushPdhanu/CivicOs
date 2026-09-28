@@ -21,7 +21,8 @@ export default function GovernmentReports() {
   const filteredReports = reports.filter(r => {
     const matchesSearch = r.title.toLowerCase().includes(searchTerm.toLowerCase()) || r.id.toLowerCase().includes(searchTerm.toLowerCase())
     const matchesStatus = statusFilter === 'ALL' || r.status === statusFilter
-    const matchesSeverity = severityFilter === 'ALL' || r.severity === severityFilter
+    const sev = r.severity || r.aiAnalysis?.severity || 'MEDIUM'
+    const matchesSeverity = severityFilter === 'ALL' || sev === severityFilter
     return matchesSearch && matchesStatus && matchesSeverity
   })
 
@@ -95,10 +96,10 @@ export default function GovernmentReports() {
                     </td>
                     <td className="py-4 px-6 text-sm text-slate-800 max-w-[200px] truncate" title={report.title}>{report.title}</td>
                     <td className="py-4 px-6 text-sm text-slate-600">{report.category}</td>
-                    <td className="py-4 px-6"><SeverityBadge severity={report.severity} /></td>
+                    <td className="py-4 px-6"><SeverityBadge severity={report.severity || report.aiAnalysis?.severity || 'MEDIUM'} /></td>
                     <td className="py-4 px-6"><StatusBadge status={report.status} /></td>
                     <td className="py-4 px-6 text-sm text-slate-600">{report.location.district}</td>
-                    <td className="py-4 px-6 text-sm text-slate-500">{new Date(report.createdAt).toLocaleDateString()}</td>
+                    <td className="py-4 px-6 text-sm text-slate-500">{new Date(report.createdAt || report.timestamp).toLocaleDateString()}</td>
                   </tr>
                 ))
               ) : (

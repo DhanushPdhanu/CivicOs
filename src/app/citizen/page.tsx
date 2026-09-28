@@ -52,11 +52,11 @@ export default function CitizenDashboard() {
                         <div className="flex flex-wrap gap-x-4 gap-y-2 text-sm text-slate-500">
                           <div className="flex items-center gap-1">
                             <MapPin className="w-4 h-4" />
-                            {report.address}
+                            {report.address || report.location?.address}
                           </div>
                           <div className="flex items-center gap-1">
                             <Calendar className="w-4 h-4" />
-                            {new Date(report.createdAt).toLocaleDateString()}
+                            {new Date(report.createdAt || report.timestamp).toLocaleDateString()}
                           </div>
                         </div>
                       </div>
@@ -85,13 +85,13 @@ export default function CitizenDashboard() {
                   <CardContent className="p-5">
                     <div className="flex justify-between items-start mb-3">
                       <StatusBadge status={report.status} />
-                      <span className="text-xs text-slate-400">{new Date(report.createdAt).toLocaleDateString()}</span>
+                      <span className="text-xs text-slate-400">{new Date(report.createdAt || report.timestamp).toLocaleDateString()}</span>
                     </div>
                     <h3 className="font-semibold text-slate-900 mb-2 truncate">{report.title || report.category}</h3>
                     <p className="text-slate-600 text-sm line-clamp-2 mb-4">{report.description}</p>
                     <div className="flex items-center gap-1 text-xs text-slate-500">
                       <MapPin className="w-3 h-3" />
-                      <span className="truncate">{report.address}</span>
+                      <span className="truncate">{report.address || report.location?.address}</span>
                     </div>
                   </CardContent>
                 </Card>

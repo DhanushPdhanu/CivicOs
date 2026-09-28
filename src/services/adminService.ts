@@ -1,8 +1,10 @@
 import type { User, AuditEvent, AdminStats } from '../types';
 import { mockReports } from '../data/mockData';
 
-// Export types used by admin/page.tsx
+// Export types used by admin pages
 export type ActivityFeedItem = AuditEvent;
+export type AuditLog = AuditEvent;
+export type ReportStats = { total: number; pending: number; analyzing: number; reviewed: number; resolved: number };
 export type { AdminStats };
 
 const mockUsers: User[] = [

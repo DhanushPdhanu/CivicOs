@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, createContext, useContext, useCallback } from 'react';
+import React, { useState, useEffect, createContext, useContext, useCallback } from 'react';
 import { CheckCircle2, AlertCircle, Info, X } from 'lucide-react';
 
 type ToastType = 'success' | 'error' | 'info';
@@ -11,8 +11,23 @@ interface Toast {
   type: ToastType;
 }
 
+export interface ToastOptions {
+  title?: string;
+  description?: string;
+  variant?: 'default' | 'destructive' | 'success';
+}
+
+export interface ToastFunction {
+  (messageOrOptions: string | ToastOptions, typeOrVariant?: ToastType): void;
+  success?: (message: string) => void;
+  error?: (message: string) => void;
+  info?: (message: string) => void;
+}
+
 interface ToastContextType {
   showToast: (message: string, type?: ToastType) => void;
+  addToast: (message: string, type?: ToastType) => void;
+  toast: ToastFunction;
 }
 
 const ToastContext = createContext<ToastContextType | null>(null);
@@ -27,16 +42,36 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
   const [toasts, setToasts] = useState<Toast[]>([]);
 
   const showToast = useCallback((message: string, type: ToastType = 'success') => {
-    const id = `toast-${Date.now()}`;
+    const id = `toast-${Date.now()}-${Math.random()}`;
     setToasts(prev => [...prev, { id, message, type }]);
   }, []);
+
+  const addToast = useCallback((message: string, type: ToastType = 'success') => {
+    showToast(message, type);
+  }, [showToast]);
+
+  const toastHandler = useCallback((messageOrOptions: string | ToastOptions, typeOrVariant?: ToastType) => {
+    if (typeof messageOrOptions === 'string') {
+      showToast(messageOrOptions, typeOrVariant || 'success');
+    } else if (messageOrOptions && typeof messageOrOptions === 'object') {
+      const msg = [messageOrOptions.title, messageOrOptions.description].filter(Boolean).join(': ') || 'Notification';
+      const type: ToastType = messageOrOptions.variant === 'destructive' ? 'error' : 'success';
+      showToast(msg, type);
+    }
+  }, [showToast]);
+
+  const toastCallable: ToastFunction = Object.assign(toastHandler, {
+    success: (msg: string) => showToast(msg, 'success'),
+    error: (msg: string) => showToast(msg, 'error'),
+    info: (msg: string) => showToast(msg, 'info'),
+  });
 
   const removeToast = useCallback((id: string) => {
     setToasts(prev => prev.filter(t => t.id !== id));
   }, []);
 
   return (
-    <ToastContext.Provider value={{ showToast }}>
+    <ToastContext.Provider value={{ showToast, addToast, toast: toastCallable }}>
       {children}
       <div className="fixed bottom-4 right-4 z-50 space-y-2 max-w-sm" role="status" aria-live="polite">
         {toasts.map(toast => (

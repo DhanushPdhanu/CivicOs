@@ -96,7 +96,7 @@ export default function GovernmentReview() {
                           <AlertTriangle size={12} /> HIGH PRIORITY
                         </span>
                       )}
-                      <span className="text-xs font-bold bg-slate-100 text-slate-700 px-2.5 py-1 rounded-md border border-slate-200">{rec.location || 'Citywide'}</span>
+                      <span className="text-xs font-bold bg-slate-100 text-slate-700 px-2.5 py-1 rounded-md border border-slate-200">{typeof rec.location === 'string' ? rec.location : (rec.location?.district || rec.location?.address || 'Citywide')}</span>
                       <span className="text-xs font-bold bg-green-50 text-green-700 px-2.5 py-1 rounded-md border border-green-200">Score: {rec.priorityScore || 85}</span>
                     </div>
                     <h3 className="text-xl font-bold text-slate-900 mb-2">{rec.title}</h3>

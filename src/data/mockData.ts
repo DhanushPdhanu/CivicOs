@@ -2155,5 +2155,6 @@ export const mockEvidences: Evidence[] = [
 export const mockUser: User = {
   id: 'USR-ME',
   name: 'Demo Official',
+  email: 'official@demo.com',
   role: 'Government'
 };

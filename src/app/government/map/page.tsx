@@ -16,7 +16,8 @@ export default function GovernmentMap() {
   const [showSidebar, setShowSidebar] = useState(true)
 
   const filteredHotspots = hotspots.filter(h => {
-    const matchesSearch = h.category.toLowerCase().includes(searchTerm.toLowerCase()) || h.district.toLowerCase().includes(searchTerm.toLowerCase())
+    const dist = h.district || h.location?.district || ''
+    const matchesSearch = h.category.toLowerCase().includes(searchTerm.toLowerCase()) || dist.toLowerCase().includes(searchTerm.toLowerCase())
     const matchesCategory = categoryFilter === 'ALL' || h.category === categoryFilter
     const matchesSeverity = severityFilter === 'ALL' || h.severity === severityFilter
     return matchesSearch && matchesCategory && matchesSeverity
@@ -125,11 +126,11 @@ export default function GovernmentMap() {
                       <strong className="text-slate-900 font-bold">{hotspot.category}</strong>
                       <SeverityBadge severity={hotspot.severity} />
                     </div>
-                    <p className="text-slate-600 text-xs mb-3 flex items-center gap-1"><MapPin size={12}/> {hotspot.district}</p>
+                    <p className="text-slate-600 text-xs mb-3 flex items-center gap-1"><MapPin size={12}/> {hotspot.district || hotspot.location?.district}</p>
                     <div className="flex justify-between text-xs text-slate-500 border-t border-slate-100 pt-3">
                       <span className="font-medium bg-slate-100 px-2 py-1 rounded">{hotspot.reportCount} reports</span>
-                      <span className={`px-2 py-1 rounded font-medium ${hotspot.trend === 'up' ? 'bg-red-50 text-red-600' : 'bg-green-50 text-green-600'}`}>
-                        {hotspot.trend === 'up' ? '↑ Rising' : '↓ Falling'}
+                      <span className={`px-2 py-1 rounded font-medium ${hotspot.trend === 'up' || (hotspot.trendPercentage && hotspot.trendPercentage > 0) ? 'bg-red-50 text-red-600' : 'bg-green-50 text-green-600'}`}>
+                        {hotspot.trend === 'up' || (hotspot.trendPercentage && hotspot.trendPercentage > 0) ? '↑ Rising' : '↓ Falling'}
                       </span>
                     </div>
                     <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-4 h-4 bg-white border-b border-r border-slate-200 transform rotate-45"></div>
@@ -171,7 +172,7 @@ export default function GovernmentMap() {
                     <SeverityBadge severity={hotspot.severity} />
                   </div>
                   <div className="flex items-center gap-1.5 text-xs text-slate-500 mb-3">
-                    <MapPin size={14} className="text-slate-400" /> {hotspot.district}
+                    <MapPin size={14} className="text-slate-400" /> {hotspot.district || hotspot.location?.district}
                   </div>
                   <div className="flex items-center justify-between mt-3 pt-3 border-t border-slate-100 text-xs text-slate-600">
                     <span className="flex items-center gap-1.5 font-medium"><Users size={14} className="text-slate-400" /> {hotspot.populationAffected?.toLocaleString() || '12,500'} affected</span>
